@@ -2,10 +2,6 @@
 #include <string>
 using namespace std;
 
-#include <iostream>
-#include <string>
-using namespace std;
-
 class Inventory {
 private:
     string products[100];
