@@ -1,34 +1,45 @@
 #include <iostream>
 #include <string>
+#include <vector>
 using namespace std;
+
+
+class ManageProduct {
+private:
+    vector<string> products;
+
+public:
+    void addProduct(const string& products) {
+        this->products.push_back(products);
+    }
+
+    const vector<string> getProducts()  {
+        return products;
+    }
+};
 
 class Inventory {
 private:
-    string products[100];
-    int itemCount;
+    ManageProduct manageProduct;
 
 public:
-    Inventory() : itemCount(0) {}
-
     void addProduct() {
         char user_choice;
 
-        for (int i = 0; i < 100; i++) {
+        do {
+            string product_name;
             cout << "\n\tEnter the Product name:";
-            cin >> this->products[i]; // Use 'this' to access member variable
-            this->itemCount++;
+            cin >> product_name;
+            manageProduct.addProduct(product_name);
 
             cout << "\n\tDo you want to add more?\n\tPress y for yes or n for no:";
             cin >> user_choice;
-
-            if (user_choice != 'y') {
-                break;
-            }
-        }
+        } while (user_choice == 'y');
 
         cout << "\n\tThe products you entered are:\n";
-        for (int i = 0; i < this->itemCount; i++) {
-            cout << "\t" << i + 1 << ". " << this->products[i] << endl; 
+        const vector<string> products = manageProduct.getProducts();
+        for (size_t i = 0; i < products.size(); i++) {
+            cout << "\t" << i + 1 << ". " << products[i] << endl;
         }
     }
 };
@@ -76,7 +87,7 @@ public:
 };
 
 
-class ListedItems : public Italian, public Chinese {
+class Cuisine : public Italian, public Chinese {
     public:
     void display()  {
         Italian::display();
@@ -88,7 +99,7 @@ class ListedItems : public Italian, public Chinese {
 
 class MainMenu {
 public:
-    void display() const {
+    void display() {
         cout << "\n\n";
         cout << "\t\tPress 1 to See the main menu.\n";          
         cout << "\t\tPress 2 to Add items to buy.\n";
@@ -101,7 +112,7 @@ int main() {
     MainMenu mainMenu;
     mainMenu.display();  
     Inventory inventory; 
-    ListedItems listed_items;  
+    Cuisine cuisine;  
                             
 	
 	int choice;
@@ -112,7 +123,7 @@ int main() {
 	{
         case 1:
 			cout<<"\n\tYou are here to see main menu\n";
-            listed_items.display();
+            cuisine.display();
 
 			break;
 
