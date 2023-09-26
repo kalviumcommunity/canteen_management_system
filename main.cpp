@@ -13,7 +13,7 @@ public:
         this->products.push_back(products);
     }
 
-    const vector<string> getProducts()  {
+    const vector<string>& getProducts()  {
         return products;
     }
 };
@@ -37,7 +37,7 @@ public:
         } while (user_choice == 'y');
 
         cout << "\n\tThe products you entered are:\n";
-        const vector<string> products = manageProduct.getProducts();
+        const vector<string>& products = manageProduct.getProducts();
         for (size_t i = 0; i < products.size(); i++) {
             cout << "\t" << i + 1 << ". " << products[i] << endl;
         }
