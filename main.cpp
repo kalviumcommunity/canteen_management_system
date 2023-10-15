@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <vector>
+#include <cmath>
 using namespace std;
 
 class ManageProduct
@@ -8,14 +10,35 @@ class ManageProduct
 private:
     static const int maxProducts = 50;
     string products[maxProducts];
-    int count = 0;
+    static int count;
+    vector<string> menu = {
+        "Pasta - Price: 150",
+        "Pizza - Price: 1200",
+        "Italian Salad - Price: 150",
+        "Arancini - Price: 150",
+        "Focaccia - Price: 1500",
+        "Italian Cheese - Price: 1250",
+        "Lasagna - Price: 1000",
+        "Ossobuco - Price: 200",
+        "Risotto - Price: 80",
+        "Truffles - Price: 250",
+        "Maggi Manchurian - Price: 150",
+        "Aloo Manchurian - Price: 1200",
+        "Thicker Sweet Corn Soup Indian Style - Price: 150",
+        "Cheese Schezwan Sandwich - Price: 150",
+        "Idli Manchurian - Price: 1500",
+        "Chinese Chicken Cutlet - Price: 1250",
+        "Chilli Chicken Open Toast - Price: 1000",
+        "Veg Noodle Soup - Price: 200",
+        "Bread Manchurian - Price: 80",
+        "Chinese Mutton Cubes - Price: 250"};
 
 public:
-    void addProduct(const string &productName)
+    void addProduct(const int &productNumber)
     {
         if (count < maxProducts)
         {
-            products[count] = productName;
+            products[count] = menu[productNumber - 1];
             count++;
         }
         else
@@ -34,8 +57,7 @@ public:
     }
 };
 
-
-
+int ManageProduct::count = 0;
 
 class OrderManager
 {
@@ -44,34 +66,22 @@ private:
     ofstream file;
 
 public:
-    OrderManager()
+    void addOrder(const string &order)
     {
-        file.open(filename, ios::app); // Open the file in append mode in the constructor
+        file.open(filename, ios::app); 
         if (!file.is_open())
         {
             cout << "Failed to open the file for saving orders." << endl;
         }
-    }
-
-
-    void addOrder(const string &order)
-    {
         file << order << endl;
         cout << "Order saved successfully!" << endl;
-    }
-
-    
-    ~OrderManager()
-    {
         if (file.is_open())
         {
-            file.close(); // Close the file in the destructor
+            file.close(); 
         }
     }
+
 };
-
-
-
 
 class Inventory
 {
@@ -83,79 +93,91 @@ public:
     void addProduct()
     {
         char userChoice;
+        cout << "Enter your name: ";
+        string customerName;
+        cin >> customerName;
+
+        string order = customerName + ": "; 
 
         do
         {
-            string productName;
-            cout << "\nEnter the Product name: ";
-            cin >> productName;
-            manageProduct.addProduct(productName);
+            int productNumber;
+            cout << "\nEnter the Product number from menu: ";
+            cin >> productNumber;
+
+            if (productNumber > 0 && productNumber <= 20)
+            {
+                manageProduct.addProduct(productNumber);
+            }
+            else
+            {
+                cout << "Please provide a valid number" << endl;
+            }
 
             cout << "\nDo you want to add more?\nPress 'y' for yes or 'n' for no: ";
             cin >> userChoice;
         } while (userChoice == 'y');
 
         cout << "\nThe products you entered are:\n";
-        string order;
-        const string * products = manageProduct.getProducts();
+        const string *products = manageProduct.getProducts();
         int productCount = manageProduct.getProductCount();
+
         for (int i = 0; i < productCount; i++)
         {
             cout << i + 1 << ". " << products[i] << endl;
             order += products[i] + ",";
         }
-         orderManager.addOrder(order);
+        orderManager.addOrder(order);
     }
 };
 
-class Italian
+class Cuisine
 {
 public:
-    void display()
+    vector<string> virtual display() = 0;
+};
+
+class Italian : public Cuisine
+{
+public:
+    vector<string> display() override
     {
         cout << "\n\tItalian cuisine:" << endl;
-        cout << "\n\tSR  Meal                           Price";
-        cout << "\n\t1.  Pasta.                         150";
-        cout << "\n\t2.  Pizza                          1200";
-        cout << "\n\t3.  Italian Salad.                 150";
-        cout << "\n\t4.  Arancini.                      150";
-        cout << "\n\t5.  Focaccia.                      1500";
-        cout << "\n\t6.  Italian Cheese.                1250";
-        cout << "\n\t7.  Lasagna.                       1000";
-        cout << "\n\t8.  Ossobuco.                      200";
-        cout << "\n\t9.  Risotto.                       80";
-        cout << "\n\t10. Truffles.                      250";
+        vector<string> menu;
+        menu.push_back("Pasta - Price: 150");
+        menu.push_back("Pizza - Price: 1200");
+        menu.push_back("Italian Salad - Price: 150");
+        menu.push_back("Arancini - Price: 150");
+        menu.push_back("Focaccia - Price: 1500");
+        menu.push_back("Italian Cheese - Price: 1250");
+        menu.push_back("Lasagna - Price: 1000");
+        menu.push_back("Ossobuco - Price: 200");
+        menu.push_back("Risotto - Price: 80");
+        menu.push_back("Truffles - Price: 250");
+
+        return menu;
     }
 };
 
-class Chinese
+class Chinese : public Cuisine
 {
 public:
-    virtual void display()
+    vector<string> display() override
     {
-        cout << endl;
         cout << "\n\tChinese cuisine:" << endl;
-        cout << "\n\tSR  Meal                                      Price";
-        cout << "\n\t1.  Maggi Manchurian.                         150";
-        cout << "\n\t2.  Aloo Manchurian.                          1200";
-        cout << "\n\t3.  Thicker Sweet Corn Soup Indian Style.     150";
-        cout << "\n\t4.  Cheese Schezwan Sandwich.                 150";
-        cout << "\n\t5.  Idli Manchurian.                          1500";
-        cout << "\n\t6.  Chinese Chicken Cutlet .                  1250";
-        cout << "\n\t7.  Chilli Chicken Open Toast.                1000";
-        cout << "\n\t8.  Veg Noodle Soup.                          200";
-        cout << "\n\t9.  Bread Manchurian.                         80";
-        cout << "\n\t10. Chinese Mutton Cubes.                     250";
-    }
-};
+        vector<string> menu;
+        menu.push_back("Maggi Manchurian - Price: 150");
+        menu.push_back("Aloo Manchurian - Price: 1200");
+        menu.push_back("Thicker Sweet Corn Soup Indian Style - Price: 150");
+        menu.push_back("Cheese Schezwan Sandwich - Price: 150");
+        menu.push_back("Idli Manchurian - Price: 1500");
+        menu.push_back("Chinese Chicken Cutlet - Price: 1250");
+        menu.push_back("Chilli Chicken Open Toast - Price: 1000");
+        menu.push_back("Veg Noodle Soup - Price: 200");
+        menu.push_back("Bread Manchurian - Price: 80");
+        menu.push_back("Chinese Mutton Cubes - Price: 250");
 
-class Cuisine : public Italian, public Chinese
-{
-public:
-    void display()
-    {
-        Italian::display();
-        Chinese::display();
+        return menu;
     }
 };
 
@@ -176,7 +198,8 @@ int main()
     MainMenu mainMenu;
     mainMenu.display();
     Inventory inventory;
-    Cuisine cuisine;
+    Italian italian;
+    Chinese chinese;
 
     int choice;
     cout << "\n\n\tWhere do you want to go now???";
@@ -186,8 +209,35 @@ int main()
     {
     case 1:
         cout << "\n\tYou are here to see main menu\n";
-        cuisine.display();
-
+        Cuisine *cuisinePtr[2];
+        int choice;
+        cout << "\n\tChoose a cuisine:\n";
+        cout << "\n\t1. Italian\n";
+        cout << "\n\t2. Chinese\n";
+        cout << "\n\tEnter your choice: ";
+        cin >> choice;
+        if (choice == 1)
+        {
+            cuisinePtr[0] = &italian;
+            vector<string> display = cuisinePtr[0]->display();
+            for (int i = 0; i < display.size(); i++)
+            {
+                cout << i + 1 << ". " << display[i] << endl;
+            }
+        }
+        else if (choice == 2)
+        {
+            cuisinePtr[1] = &chinese;
+            vector<string> display = cuisinePtr[1]->display();
+            for (int i = 0; i < display.size(); i++)
+            {
+                cout << i + 11 << ". " << display[i] << endl;
+            }
+        }
+        else
+        {
+            cout << "Invalid choice.\n";
+        }
         break;
 
     case 2:
