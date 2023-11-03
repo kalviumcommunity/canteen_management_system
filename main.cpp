@@ -198,8 +198,8 @@ int main()
     MainMenu mainMenu;
     mainMenu.display();
     Inventory inventory;
-    Italian italian;
-    Chinese chinese;
+    // Italian italian;
+    // Chinese chinese;
 
     int choice;
     cout << "\n\n\tWhere do you want to go now???";
@@ -218,7 +218,7 @@ int main()
         cin >> choice;
         if (choice == 1)
         {
-            cuisinePtr[0] = &italian;
+            cuisinePtr[0] = new Italian;
             vector<string> display = cuisinePtr[0]->display();
             for (int i = 0; i < display.size(); i++)
             {
@@ -227,7 +227,7 @@ int main()
         }
         else if (choice == 2)
         {
-            cuisinePtr[1] = &chinese;
+            cuisinePtr[1] = new Chinese;
             vector<string> display = cuisinePtr[1]->display();
             for (int i = 0; i < display.size(); i++)
             {
@@ -238,6 +238,15 @@ int main()
         {
             cout << "Invalid choice.\n";
         }
+
+        // Deallocate memory
+        for (int i = 0; i < 2; i++) {
+                if (cuisinePtr[i]) {
+                    delete cuisinePtr[i];
+                }
+        }
+
+        
         break;
 
     case 2:
